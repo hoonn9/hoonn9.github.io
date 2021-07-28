@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>HOONS&#39;s BLOG</title>
-    <link>https://hoonn9.github.io/</link>
-    <description>Recent content on HOONS&#39;s BLOG</description>
+    <title>javascript on HOONS&#39;s BLOG</title>
+    <link>https://hoonn9.github.io/tags/javascript/</link>
+    <description>Recent content in javascript on HOONS&#39;s BLOG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Wed, 28 Jul 2021 01:03:27 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 27 Jul 2021 21:27:11 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My First Post</title>
       <link>https://hoonn9.github.io/posts/my-first-post/</link>

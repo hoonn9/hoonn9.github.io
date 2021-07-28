@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on GOHUGE BLOG</title>
+    <title>Categories on HOONS&#39;s BLOG</title>
     <link>https://hoonn9.github.io/categories/</link>
-    <description>Recent content in Categories on GOHUGE BLOG</description>
+    <description>Recent content in Categories on HOONS&#39;s BLOG</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://hoonn9.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>kr-ko</language>
+    <lastBuildDate>Tue, 27 Jul 2021 21:27:11 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>javascript</title>
+      <link>https://hoonn9.github.io/categories/javascript/</link>
+      <pubDate>Tue, 27 Jul 2021 21:27:11 +0900</pubDate>
+      
+      <guid>https://hoonn9.github.io/categories/javascript/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>
