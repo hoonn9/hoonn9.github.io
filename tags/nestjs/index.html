@@ -3,22 +3,22 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tags  | HOONS_DEV BLOG</title>
-  <meta name="description" content="개발하며 기록을 남기는 공간입니다. 'Tags'read this article.">
-  <meta property="og:title" content="Tags">
+  <title>NestJS  | HOONS_DEV BLOG</title>
+  <meta name="description" content="개발하며 기록을 남기는 공간입니다. 'NestJS'read this article.">
+  <meta property="og:title" content="NestJS">
   
   <meta property="og:type" content="website">
   
-  <meta property="og:description" content="개발하며 기록을 남기는 공간입니다. 'Tags'read this article.">
-  <meta property="og:url" content="https://hoonn9.github.io/tags/">
+  <meta property="og:description" content="개발하며 기록을 남기는 공간입니다. 'NestJS'read this article.">
+  <meta property="og:url" content="https://hoonn9.github.io/tags/nestjs/">
   <meta property="og:site_name" content="HOONS_DEV BLOG">
   
   <meta property="og:image" content="https://hoonn9.github.io/images/thumbnail.png">
   
   
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="canonical" href="https://hoonn9.github.io/tags/">
-  <link rel="alternate" type="application/rss+xml" href="https://hoonn9.github.io/tags/index.xml" title="HOONS_DEV BLOG" />
+  <link rel="canonical" href="https://hoonn9.github.io/tags/nestjs/">
+  <link rel="alternate" type="application/rss+xml" href="https://hoonn9.github.io/tags/nestjs/index.xml" title="HOONS_DEV BLOG" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
@@ -56,51 +56,42 @@
     </div>
   </div>
   <div class="container">    
-
-<div class="tags">
-  <h1>TAGS</h1>
-  <p>Read an article by tags.</p>
-  <div class="tag-list">
-    
-    
-    
-    <div class="tag">
-      <a href="https://hoonn9.github.io/tags/apollo">
-        apollo <small>(1)</small>
-      </a>
-    </div>
-    
-    <div class="tag">
-      <a href="https://hoonn9.github.io/tags/graphql">
-        graphql <small>(1)</small>
-      </a>
-    </div>
-    
-    <div class="tag">
-      <a href="https://hoonn9.github.io/tags/nest">
-        nest <small>(1)</small>
-      </a>
-    </div>
-    
-    <div class="tag">
-      <a href="https://hoonn9.github.io/tags/nestjs">
-        nestjs <small>(1)</small>
-      </a>
-    </div>
-    
-    <div class="tag">
-      <a href="https://hoonn9.github.io/tags/typescript">
-        typescript <small>(1)</small>
-      </a>
-    </div>
-    
-    <div class="tag">
-      <a href="https://hoonn9.github.io/tags/upload">
-        upload <small>(1)</small>
-      </a>
-    </div>
-       
+<div class="container">
+  
+  <div class="post">
+  <div class="post-title">
+    <a href="https://hoonn9.github.io/nodejs/nestjs/nestjs-graphql-file-upload/" title="[NestJS] Graphql File Upload">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>Tuesday, Jan 11, 2022 20:56</time>
+        <h1>[NestJS] Graphql File Upload</h1>
+      </div>
+    </a>
   </div>
+  
+  <div>
+    graphql (apollo client)를 사용하는 프론트에서 파일 업로드 구현 중에 REST를 사용하지 않고 오직 Graphql로 파일 업로드를 해보고 싶다고 생각이 들었다. 작업 중이던 NestJS에 적용하다가 삽질했던거 공유해본다.
+패키지 설치 NestJS npm install graphql-upload
+React npm install apollo-upload-client
+npm i -D @types/apollo-upload-client
+apollo-upload-client mutation의 content-type을 json에서 multipart로 변환 및 operation, variables을 formData에 주입 해준다.
+apollo client의 기존 httpLink를 createUploadLink하여 uploadLink로 대체해주는 것 만으로 적용 가능하다.
+import { createUploadLink } from &#34;apollo-upload-client&#34;; const httpLink = createUploadLink({ uri: GRAPHQL_URL, credentials: &#34;include&#34;, }); const errorLink = onError(({ graphQLErrors, networkError }) =&gt; { // .
+    
+    <a href="/nodejs/nestjs/nestjs-graphql-file-upload/" class="summary-more">More</a>
+    
+  </div>
+</div>
+
+  <hr class="summary-sep" />
+  
+</div>
+<div class="paging">
+  
+  <span class="page">
+    Page 1 / 1
+  </span>
+  
 </div>
 
 <div class="go-top">

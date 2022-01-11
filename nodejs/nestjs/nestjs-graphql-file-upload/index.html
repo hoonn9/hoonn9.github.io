@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[NestJS] Graphql File Upload  | HOONS_DEV BLOG</title>
+  <meta name="description" content="개발하며 기록을 남기는 공간입니다. '[NestJS] Graphql File Upload'read this article.">
+  <meta property="og:title" content="[NestJS] Graphql File Upload">
+  
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2022-01-11">
+  
+  <meta property="og:description" content="개발하며 기록을 남기는 공간입니다. '[NestJS] Graphql File Upload'read this article.">
+  <meta property="og:url" content="https://hoonn9.github.io/nodejs/nestjs/nestjs-graphql-file-upload/">
+  <meta property="og:site_name" content="HOONS_DEV BLOG">
+  
+  <meta property="og:image" content="https://hoonn9.github.io/images/thumbnail.png">
+  
+  
+  <meta property="og:tags" content="NestJS">
+  
+  <meta property="og:tags" content="Nest">
+  
+  <meta property="og:tags" content="typescript">
+  
+  <meta property="og:tags" content="apollo">
+  
+  <meta property="og:tags" content="upload">
+  
+  <meta property="og:tags" content="graphql">
+  
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="canonical" href="https://hoonn9.github.io/nodejs/nestjs/nestjs-graphql-file-upload/">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/agate.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+  
+  
+  <script type="text/javascript">
+  function toggle_visibility(id) {
+    var e = document.getElementById(id);
+    if (e.className === 'menu')
+      e.className = 'menu hidden';
+    else
+      e.className = 'menu';
+  }
+  </script>
+</head>
+<body>
+  <div class="navbar">  
+    <div class="burger">
+      <button onclick="toggle_visibility('menu')">
+        <i class="fa fa-bars" aria-hidden="true"></i> Menu
+      </button>
+    </div>
+    <div id="menu" class="menu hidden">
+      <ul>
+        <li><a href="/">HOONS_DEV BLOG</a></li>
+        <li><a href="/categories">CATEGORIES</a></li>
+        <li><a href="/tags">TAGS</a></li>
+        <li><a href="/projects">PROJECTS</a></li>        
+      </ul>
+      <input class="search" id="search-input" type="search" placeholder="Keyword" value="">
+    </div>
+  </div>
+  <div class="container">    
+
+<div class="post">
+  <div class="post-title">
+    <a href="https://hoonn9.github.io/nodejs/nestjs/nestjs-graphql-file-upload/">
+      <img src="/images/post-title-icon.png" />
+      <div class="post-meta">
+        <time>Tuesday, Jan 11, 2022 20:56</time>
+        <h1>[NestJS] Graphql File Upload</h1>
+      </div>
+    </a>
+  </div>
+  <div class="post-toc">
+    <span class="title">TOC</span>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#패키지-설치">패키지 설치</a>
+      <ul>
+        <li><a href="#nestjs">NestJS</a></li>
+        <li><a href="#react">React</a></li>
+      </ul>
+    </li>
+    <li><a href="#apollo-upload-client">apollo-upload-client</a></li>
+    <li><a href="#graphql-upload">graphql-upload</a>
+      <ul>
+        <li><a href="#maints">main.ts</a></li>
+        <li><a href="#dto">DTO</a></li>
+        <li><a href="#resolver">Resolver</a></li>
+        <li><a href="#fileservice">FileService</a></li>
+      </ul>
+    </li>
+    <li><a href="#nest의-validationpipe-사용-시">Nest의 validationPipe 사용 시</a>
+      <ul>
+        <li><a href="#exclude-옵션을-추가하여-validation에서-제외해준다">exclude 옵션을 추가하여 validation에서 제외해준다.</a></li>
+        <li><a href="#dto-1">DTO</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+  </div>
+  <section class="post-content">
+    <p>graphql (apollo client)를 사용하는 프론트에서 파일 업로드 구현 중에 REST를 사용하지 않고 오직 Graphql로 파일 업로드를 해보고 싶다고 생각이 들었다. 작업 중이던 NestJS에 적용하다가 삽질했던거 공유해본다.</p>
+<h2 id="패키지-설치">패키지 설치</h2>
+<h3 id="nestjs">NestJS</h3>
+<p><code>npm install graphql-upload</code></p>
+<h3 id="react">React</h3>
+<p><code>npm install apollo-upload-client</code><br>
+<code>npm i -D @types/apollo-upload-client</code></p>
+<h2 id="apollo-upload-client">apollo-upload-client</h2>
+<p>mutation의 content-type을 json에서 multipart로 변환 및 operation, variables을 formData에 주입 해준다.<br>
+apollo client의 기존 httpLink를 createUploadLink하여 uploadLink로 대체해주는 것 만으로 적용 가능하다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">createUploadLink</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#34;apollo-upload-client&#34;</span>;
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">httpLink</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">createUploadLink</span>({
+  <span style="color:#a6e22e">uri</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">GRAPHQL_URL</span>,
+  <span style="color:#a6e22e">credentials</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;include&#34;</span>,
+});
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">errorLink</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">onError</span>(({ <span style="color:#a6e22e">graphQLErrors</span>, <span style="color:#a6e22e">networkError</span> }) =&gt; {
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>});
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ApolloClient</span>({
+  <span style="color:#a6e22e">link</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">from</span>([<span style="color:#a6e22e">errorLink</span>, <span style="color:#a6e22e">httpLink</span>]),
+  <span style="color:#a6e22e">cache</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">InMemoryCache</span>(),
+});
+
+</code></pre></div><p>mutation gql 생성 해주고 파일의 필드명은 Upload (Scalar 타입)<br>
+images variable 입력으로는 js의 File 객체를 넣어주면 된다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">UPLOAD_POST</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">gql</span><span style="color:#e6db74">`
+</span><span style="color:#e6db74">  mutation uploadPost($title: String!, $content: String, $images: [Upload!]) {
+</span><span style="color:#e6db74">    uploadPost(title: $title, content: $content, images: $images) {
+</span><span style="color:#e6db74">      ok
+</span><span style="color:#e6db74">      error
+</span><span style="color:#e6db74">    }
+</span><span style="color:#e6db74">  }
+</span><span style="color:#e6db74">`</span>;
+
+<span style="color:#66d9ef">const</span> [<span style="color:#a6e22e">uploadPostMutation</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">useMutation</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">uploadPost</span>, <span style="color:#a6e22e">uploadPostVariables</span><span style="color:#f92672">&gt;</span>(<span style="color:#a6e22e">UPLOAD_POST</span>);
+
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">mutate</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">useCallback</span>(<span style="color:#66d9ef">async</span>(<span style="color:#a6e22e">values</span>) =&gt; {
+  <span style="color:#75715e">// files =&gt; File[]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> {<span style="color:#a6e22e">title</span>. <span style="color:#a6e22e">content</span>, <span style="color:#a6e22e">files</span>} <span style="color:#f92672">=</span> <span style="color:#a6e22e">values</span>;
+
+  <span style="color:#66d9ef">try</span> {
+    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">data</span> } <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">addBannerMutation</span>({
+          <span style="color:#a6e22e">variables</span><span style="color:#f92672">:</span> {
+            <span style="color:#a6e22e">title</span>,
+            <span style="color:#a6e22e">content</span>,
+            <span style="color:#a6e22e">images</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">files</span>,
+          },
+        });
+  } <span style="color:#66d9ef">catch</span>(<span style="color:#a6e22e">error</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">error</span>)
+  }
+}, [])
+
+</code></pre></div><h2 id="graphql-upload">graphql-upload</h2>
+<p>Nest 프로젝트에서 다음과 같이 적용한다.</p>
+<h3 id="maints">main.ts</h3>
+<p>express app에 middleware로 graphqlUploadExpress를 추가해준다.<br>
+graphql-upload가 graphql 요청에서 file을 Promise&laquo;File&raquo;형태로 주입해준다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">graphqlUploadExpress</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;graphql-upload&#39;</span>;
+
+<span style="color:#66d9ef">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bootstrap</span>() {
+	<span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#e6db74">&#39;/graphql&#39;</span>, <span style="color:#a6e22e">graphqlUploadExpress</span>({ <span style="color:#a6e22e">maxFileSize</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1024</span>, <span style="color:#a6e22e">maxFiles</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span> }));
+	
+  <span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h3 id="dto">DTO</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">GraphQLUpload</span>, <span style="color:#a6e22e">FileUpload</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;graphql-upload&#39;</span>;
+
+<span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">ArgsType</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UploadPostArgs</span> <span style="color:#66d9ef">extends</span> {
+	<span style="color:#75715e">// ...Fields
+</span><span style="color:#75715e"></span>
+  <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">Field</span>((<span style="color:#a6e22e">type</span>) =&gt; [<span style="color:#a6e22e">GraphQLUpload</span>], { <span style="color:#a6e22e">nullable</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> })
+  <span style="color:#a6e22e">images</span><span style="color:#f92672">:</span> Promise&lt;<span style="color:#f92672">FileUpload</span>&gt;[];
+}
+</code></pre></div><h3 id="resolver">Resolver</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">Mutation</span>((<span style="color:#a6e22e">returns</span>) =&gt; <span style="color:#a6e22e">UploadPostOutput</span>)
+  <span style="color:#66d9ef">async</span> <span style="color:#a6e22e">uploadPost</span>(<span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">Args</span>() <span style="color:#a6e22e">args</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UploadPostArgs</span>)<span style="color:#f92672">:</span> Promise&lt;<span style="color:#f92672">UploadPostOutput</span>&gt; {
+    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">images</span>, ...<span style="color:#a6e22e">fields</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">args</span>;
+
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">post</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">getManager</span>().<span style="color:#a6e22e">transaction</span>(<span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">em</span>) =&gt; {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">post</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">postService</span>.<span style="color:#a6e22e">create</span>(<span style="color:#a6e22e">fields</span>, <span style="color:#a6e22e">em</span>)
+      <span style="color:#a6e22e">post</span>.<span style="color:#a6e22e">files</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">fileService</span>.<span style="color:#a6e22e">uploadFiles</span>(<span style="color:#a6e22e">imageInputs</span>);
+
+      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">em</span>.<span style="color:#a6e22e">save</span>(<span style="color:#a6e22e">post</span>);
+    });
+
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">post</span>
+ }
+</code></pre></div><h3 id="fileservice">FileService</h3>
+<p>FileUpload의 createReadStream을 실행하면 fs-capacitor를 사용하여 ReadStream 객체로 만들어준다.<br>
+stream을 toBuffer 함수로 buffer만 추출한다.</p>
+<p>추출한 Buffer와 mimetype 등 파일 객체 속성들로 업로드 하면 된다.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">Injectable</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FileService</span> {
+  <span style="color:#a6e22e">constructor</span>(
+    <span style="color:#75715e">// ...Services
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">readonly</span> <span style="color:#a6e22e">uploadService</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UploadService</span>
+  ) {}
+
+  <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">toBuffer</span>(<span style="color:#a6e22e">stream</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">ReadStream</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise&lt;<span style="color:#f92672">Buffer</span>&gt;((<span style="color:#a6e22e">resolve</span>, <span style="color:#a6e22e">reject</span>) =&gt; {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">chunks</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Buffer</span>[] <span style="color:#f92672">=</span> [];
+
+      <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">buffer</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Buffer</span>;
+
+      <span style="color:#a6e22e">stream</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;data&#34;</span>, (<span style="color:#a6e22e">chunk</span>) =&gt; {
+        <span style="color:#a6e22e">chunks</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">chunk</span> <span style="color:#a6e22e">as</span> <span style="color:#a6e22e">Buffer</span>);
+      });
+
+      <span style="color:#a6e22e">stream</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;end&#34;</span>, () =&gt; {
+        <span style="color:#a6e22e">buffer</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Buffer</span>.<span style="color:#a6e22e">concat</span>(<span style="color:#a6e22e">chunks</span>);
+        <span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">buffer</span>);
+      });
+
+      <span style="color:#a6e22e">stream</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#34;error&#34;</span>, <span style="color:#a6e22e">reject</span>);
+    });
+  }
+
+  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">async</span> <span style="color:#a6e22e">toUploadS3Input</span>(<span style="color:#a6e22e">file</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">FileUpload</span>)<span style="color:#f92672">:</span> Promise&lt;<span style="color:#f92672">UploadS3Input</span>&gt; {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">stream</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">createReadStream</span>();
+
+    <span style="color:#66d9ef">return</span> {
+      <span style="color:#a6e22e">buffer</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">await</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">toBuffer</span>(<span style="color:#a6e22e">stream</span>),
+      <span style="color:#a6e22e">mimetype</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">file</span>.<span style="color:#a6e22e">mimetype</span>,
+    };
+  }
+
+  <span style="color:#66d9ef">async</span> <span style="color:#a6e22e">uploadFiles</span>(<span style="color:#a6e22e">files</span><span style="color:#f92672">:</span> Promise&lt;<span style="color:#f92672">FileUpload</span>&gt;[]) {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">inputs</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> Promise.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">files</span>.<span style="color:#a6e22e">map</span>(<span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">file</span>) =&gt; <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">toUploadS3Input</span>(<span style="color:#66d9ef">await</span> <span style="color:#a6e22e">file</span>)));
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">uploadService</span>.<span style="color:#a6e22e">upload</span>(<span style="color:#a6e22e">inputs</span>);
+  }
+}
+</code></pre></div><h2 id="nest의-validationpipe-사용-시">Nest의 validationPipe 사용 시</h2>
+<p><code>TypeError: Promise resolver undefined is not a function</code> 에러를 볼 수 있는데 이는 Nest의 validation pipe의 class transformer 단계에서 Promise처리가 불가능하여 발생하는 에러이다.</p>
+<h3 id="exclude-옵션을-추가하여-validation에서-제외해준다">exclude 옵션을 추가하여 validation에서 제외해준다.</h3>
+<h3 id="dto-1">DTO</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">ArgsType</span>, <span style="color:#a6e22e">Field</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;@nestjs/graphql&#39;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">GraphQLUpload</span>, <span style="color:#a6e22e">FileUpload</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;graphql-upload&#39;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">IsOptional</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;class-validator&#39;</span>;
+<span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">Exclude</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;class-transformer&#39;</span>;
+
+<span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">ArgsType</span>()
+<span style="color:#66d9ef">export</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UploadPostInput</span> <span style="color:#66d9ef">extends</span> {
+  <span style="color:#75715e">// ...Fields
+</span><span style="color:#75715e"></span>
+  <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">Exclude</span>()
+  <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">IsOptional</span>()
+  <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">Field</span>((<span style="color:#a6e22e">type</span>) =&gt; [<span style="color:#a6e22e">GraphQLUpload</span>], { <span style="color:#a6e22e">nullable</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> })
+  <span style="color:#a6e22e">imageInputs</span><span style="color:#f92672">:</span> Promise&lt;<span style="color:#f92672">FileUpload</span>&gt;[];
+}
+</code></pre></div>
+  </section>
+  <div class="share">    
+    <a
+      href="//www.facebook.com/sharer.php?src=bm&u=https%3a%2f%2fhoonn9.github.io%2fnodejs%2fnestjs%2fnestjs-graphql-file-upload%2f&t=%5bNestJS%5d%20Graphql%20File%20Upload"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-facebook"></i
+    ></a>
+    <a
+      href="//twitter.com/intent/tweet?url=https%3a%2f%2fhoonn9.github.io%2fnodejs%2fnestjs%2fnestjs-graphql-file-upload%2f&text=%5bNestJS%5d%20Graphql%20File%20Upload&tw_p=tweetbutton"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-twitter"></i
+    ></a>
+    <a
+      href="//getpocket.com/edit?url=https%3a%2f%2fhoonn9.github.io%2fnodejs%2fnestjs%2fnestjs-graphql-file-upload%2f&title=%5bNestJS%5d%20Graphql%20File%20Upload"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-get-pocket"></i
+    ></a>
+    <a
+      href="//plus.google.com/share?url=https%3a%2f%2fhoonn9.github.io%2fnodejs%2fnestjs%2fnestjs-graphql-file-upload%2f"
+      onclick="window.open(this.href, 'PCwindow', 'width=550, height=350, menubar=no, toolbar=no, scrollbars=yes'); return false;"
+      ><i class="fa fa-google-plus"></i
+    ></a>
+  </div>
+  <div class="post-meta-code">
+    <div class="desc">
+      Friendly
+      
+      <a href="mailto:"></a>
+      
+      wrotes this article at
+      <span class="highlight">Tuesday, Jan 11, 2022 20:56</span> 
+      for you.
+    </div>
+    <div class="desc">
+      
+      <div class="desc">
+        <span class="fixed-desc">_CATEGORIES</span>
+        
+        
+        <a href="https://hoonn9.github.io//categories/nodejs">#NodeJS</a>
+        
+        <a href="https://hoonn9.github.io//categories/nestjs">#NestJS</a>
+        
+      </div>
+      
+      <div class="desc">
+        <span class="fixed-desc">_TAGS</span>
+        
+        
+        <a href="https://hoonn9.github.io/tags/nestjs">#NestJS</a>
+        
+        <a href="https://hoonn9.github.io/tags/nest">#Nest</a>
+        
+        <a href="https://hoonn9.github.io/tags/typescript">#typescript</a>
+        
+        <a href="https://hoonn9.github.io/tags/apollo">#apollo</a>
+        
+        <a href="https://hoonn9.github.io/tags/upload">#upload</a>
+        
+        <a href="https://hoonn9.github.io/tags/graphql">#graphql</a>
+        
+        
+      </div>
+    </div>
+  </div>  
+  
+  <div class="post-comment">    
+        
+  </div>
+  
+  <div class="recommend-articles">
+    Recommend these articles
+    <ul>
+      
+      
+    </ul>
+  </div>
+</div>
+
+<div class="go-top">
+  <a href="#" class="go-top-button">
+    <i class="fa fa-angle-double-up"></i>
+    <span>Top</span>
+  </a>
+</div>
+<footer class="footer">
+  COPYRIGHT (C) <a href="https://blog.lulab.net">DONGGEUN,BANG (LUBANG).</a><br />
+  ALL RIGHTS RESERVED.
+</footer>
+</body>
+</html>
+

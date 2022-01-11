@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on HOONS&#39;s BLOG</title>
+    <title>Categories on HOONS_DEV BLOG</title>
     <link>https://hoonn9.github.io/categories/</link>
-    <description>Recent content in Categories on HOONS&#39;s BLOG</description>
+    <description>Recent content in Categories on HOONS_DEV BLOG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>kr-ko</language>
-    <lastBuildDate>Tue, 27 Jul 2021 21:27:11 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 Jan 2022 20:56:29 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>javascript</title>
-      <link>https://hoonn9.github.io/categories/javascript/</link>
-      <pubDate>Tue, 27 Jul 2021 21:27:11 +0900</pubDate>
+      <title>NestJS</title>
+      <link>https://hoonn9.github.io/categories/nestjs/</link>
+      <pubDate>Tue, 11 Jan 2022 20:56:29 +0900</pubDate>
       
-      <guid>https://hoonn9.github.io/categories/javascript/</guid>
+      <guid>https://hoonn9.github.io/categories/nestjs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>NodeJS</title>
+      <link>https://hoonn9.github.io/categories/nodejs/</link>
+      <pubDate>Tue, 11 Jan 2022 20:56:29 +0900</pubDate>
+      
+      <guid>https://hoonn9.github.io/categories/nodejs/</guid>
       <description></description>
     </item>
     
