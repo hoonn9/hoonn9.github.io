@@ -152,7 +152,7 @@ images variable 입력으로는 js의 File 객체를 넣어주면 된다.</p>
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> {<span style="color:#a6e22e">title</span>. <span style="color:#a6e22e">content</span>, <span style="color:#a6e22e">files</span>} <span style="color:#f92672">=</span> <span style="color:#a6e22e">values</span>;
 
   <span style="color:#66d9ef">try</span> {
-    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">data</span> } <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">addBannerMutation</span>({
+    <span style="color:#66d9ef">const</span> { <span style="color:#a6e22e">data</span> } <span style="color:#f92672">=</span> <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">uploadPostMutation</span>({
           <span style="color:#a6e22e">variables</span><span style="color:#f92672">:</span> {
             <span style="color:#a6e22e">title</span>,
             <span style="color:#a6e22e">content</span>,
@@ -168,7 +168,7 @@ images variable 입력으로는 js의 File 객체를 넣어주면 된다.</p>
 <p>Nest 프로젝트에서 다음과 같이 적용한다.</p>
 <h3 id="maints">main.ts</h3>
 <p>express app에 middleware로 graphqlUploadExpress를 추가해준다.<br>
-graphql-upload가 graphql 요청에서 file을 Promise&laquo;File&raquo;형태로 주입해준다.</p>
+graphql-upload가 graphql 요청에서 file을 Promise&laquo;FileUpload&raquo;형태로 주입해준다.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-jsx" data-lang="jsx"><span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">graphqlUploadExpress</span> } <span style="color:#a6e22e">from</span> <span style="color:#e6db74">&#39;graphql-upload&#39;</span>;
 
 <span style="color:#66d9ef">async</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bootstrap</span>() {
