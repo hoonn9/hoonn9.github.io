@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>X-Forwared-For on Hoons Blog</title>
+    <link>https://hoonn9.github.io/tags/x-forwared-for/</link>
+    <description>Recent content in X-Forwared-For on Hoons Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>kr-ko</language>
+    <copyright>Copyright © 2022–2022, hoonn9; all rights reserved.</copyright>
+    <lastBuildDate>Thu, 25 Aug 2022 15:17:29 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/tags/x-forwared-for/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[Nginx] Client IP와 X-Forwared-For</title>
+      <link>https://hoonn9.github.io/post/nginx/x-forward-for/</link>
+      <pubDate>Thu, 25 Aug 2022 15:17:29 +0900</pubDate>
+      
+      <guid>https://hoonn9.github.io/post/nginx/x-forward-for/</guid>
+      <description>프로젝트 중에 Client IP를 알아야 하는 상황이 생겼다. 프로젝트의 구성은 다음과 같다.
+AWS ELB -&amp;gt; Nginx -&amp;gt; API server
+Nginx에서 트래픽을 요청한 Client의 IP를 $remote_addr 로 알 수 있다. 그러나 로드 밸런서를 앞단에 둔 환경에서는 $remote_addr로 제대로 된 Client의 IP를 얻을 수 없다.
+로드 밸런서는 요청한 Client IP를 내 자신의 독립된 IP로 변환하기 때문에 EC2에 실행된 Nginx의 $remote_addr는 Client IP가 아닌 로드밸런서의 IP로 설정된다.
+로드 밸런서는 이를 해결하기 위해 X-Forwarded-For 헤더로 기존에 요청한 Client IP를 보낸다.</description>
+    </item>
+    
+  </channel>
+</rss>
