@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cookie on Hoons Blog</title>
+    <link>https://hoonn9.github.io/tags/cookie/</link>
+    <description>Recent content in Cookie on Hoons Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>kr-ko</language>
+    <copyright>Copyright © 2022–2022, hoonn9; all rights reserved.</copyright>
+    <lastBuildDate>Wed, 14 Sep 2022 13:56:29 +0900</lastBuildDate><atom:link href="https://hoonn9.github.io/tags/cookie/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>[Express] Nginx &#43; Express-session secure 옵션 문제</title>
+      <link>https://hoonn9.github.io/post/nodejs/express-session-secure-problem/</link>
+      <pubDate>Wed, 14 Sep 2022 13:56:29 +0900</pubDate>
+      
+      <guid>https://hoonn9.github.io/post/nodejs/express-session-secure-problem/</guid>
+      <description>문제 명시 AWS Elastic Load Balancer + EC2(Nginx + NestJS) 환경에서 express session 쿠키의 secure 옵션을 활성화하면 Set Cookie가 작동하지 않는 문제를 직면했다.
+문제 찾기 NestJS(express)의 session 설정은 다음과 같다.
+...  app.set(&amp;#39;trust proxy&amp;#39;, process.env.NODE_ENV === &amp;#39;production&amp;#39; ? 1 : false);  app.use(  session({  name: &amp;#39;sid&amp;#39;,  resave: false,  saveUninitialized: true,  rolling: true,  secret: secret,  proxy: process.env.NODE_ENV === &amp;#39;production&amp;#39;,  cookie: {  maxAge: 1000 * 60 * 60 * 24 * 30,  httpOnly: true,  secure: process.</description>
+    </item>
+    
+  </channel>
+</rss>
